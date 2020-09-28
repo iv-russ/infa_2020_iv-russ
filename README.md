@@ -1,1 +1,1 @@
-# infa_2020_iv-russ
+# infa_2020_russkikh
