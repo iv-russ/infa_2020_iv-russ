@@ -119,6 +119,80 @@ def draw_leaves():
     screen.blit(pygame.transform.rotate(leaf3, -80), (437, 178))
 
 
+def draw_panda():
+    pygame.draw.ellipse(screen, white, (600, 370, 200, 130))
+    pygame.draw.ellipse(screen, black, (580, 420, 50, 150))
+
+    paw1 = pygame.Surface((54, 75))
+    paw1.fill(black)
+    paw1.set_colorkey(peach)
+    screen.blit(pygame.transform.rotate(paw1, 10), (595, 433))
+
+    paw2 = pygame.Surface((40, 80))
+    paw2.fill(black)
+    paw2.set_colorkey(peach)
+    screen.blit(pygame.transform.rotate(paw2, -20), (597, 491))
+
+    pygame.draw.rect(screen, black, (675, 370, 60, 150))
+
+    paw3 = pygame.Surface((48, 75))
+    paw3.fill(black)
+    paw3.set_colorkey(peach)
+    screen.blit(pygame.transform.rotate(paw3, -15), (660, 497))
+
+    paw4 = pygame.Surface((100, 60))
+    paw4.fill(peach)
+    paw4.set_colorkey(peach)
+    pygame.draw.ellipse(paw4, black, (0, 0, 100, 60))
+    screen.blit(pygame.transform.rotate(paw4, 30), (630, 520))
+
+    pygame.draw.polygon(screen, black, [(730, 500), (700, 520), (730, 550), (730, 500)])
+
+    paw5 = pygame.Surface((150, 70))
+    paw5.fill(peach)
+    paw5.set_colorkey(peach)
+    pygame.draw.ellipse(paw5, black, (0, 0, 150, 70))
+    screen.blit(pygame.transform.rotate(paw5, 60), (690, 450))
+
+    face1 = pygame.Surface((170, 100))
+    face1.fill(peach)
+    face1.set_colorkey(peach)
+    pygame.draw.ellipse(face1, white, (0, 0, 170, 100))
+    screen.blit(pygame.transform.rotate(face1, 80), (570, 300))
+
+    face2 = pygame.Surface((170, 80))
+    face2.fill(peach)
+    face2.set_colorkey(peach)
+    pygame.draw.ellipse(face2, white, (0, 0, 170, 80))
+    screen.blit(pygame.transform.rotate(face1, -60), (590, 290))
+
+    face3 = pygame.Surface((150, 80))
+    face3.fill(peach)
+    face3.set_colorkey(peach)
+    pygame.draw.ellipse(face3, white, (0, 0, 170, 80))
+    screen.blit(pygame.transform.rotate(face3, 10), (582, 385))
+
+    ear1 = pygame.Surface((90, 45))
+    ear1.fill(peach)
+    ear1.set_colorkey(peach)
+    pygame.draw.ellipse(ear1, black, (0, 0, 80, 40))
+    screen.blit(pygame.transform.rotate(ear1, 55), (557, 300))
+
+    ear2 = pygame.Surface((80, 45))
+    ear2.fill(peach)
+    ear2.set_colorkey(peach)
+    pygame.draw.ellipse(ear2, black, (0, 0, 80, 40))
+    screen.blit(pygame.transform.rotate(ear2, -65), (662, 312))
+
+    pygame.draw.ellipse(screen, black, (595, 455, 40, 25))
+
+    pygame.draw.ellipse(screen, black, (580, 400, 30, 45))
+
+    pygame.draw.ellipse(screen, black, (630, 410, 40, 40))
+
+    pygame.draw.rect(screen, black, (720, 375, 15, 90))
+
+
 pygame.init()
 
 FPS = 30
@@ -134,6 +208,7 @@ screen.fill(peach)
 draw_bamboo_sticks()
 draw_bamboo_branches()
 draw_leaves()
+draw_panda()
 
 pygame.display.update()
 clock = pygame.time.Clock()
