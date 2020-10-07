@@ -26,6 +26,13 @@ pink = (255, 157, 155)
 
 
 def draw_window(x, y, width, height):
+    """
+    Function that draws window
+    :param x: x-coordinate of the left top corner
+    :param y: y-coordinate of the left top corner
+    :param width: width of window
+    :param height: height of window
+    """
     rect(screen, white, (x, y, width, height))
     rect(screen, light_blue, (x + width * 0.025, y + height * 0.025, 0.45 * width, 0.45 * height))
     rect(screen, light_blue, (x + width * 0.025, y + height * 0.525, 0.45 * width, 0.45 * height))
@@ -34,110 +41,116 @@ def draw_window(x, y, width, height):
 
 
 def draw_cat(surface, x, y, width, height, body_color, eyes_color, orientation):
+    """
+    Function that draws a cat
+    :param surface: object pygame.Surface
+    :param x: x-coordinate of the left top corner
+    :param y: y-coordinate of the left top corner
+    :param width: width of cat
+    :param height: height of cat
+    :param body_color: RGB-color of body
+    :param eyes_color: RGB-color of eyes
+    :param orientation: 'right' or 'left'
+    """
     # cat surface
-    cat = pygame.Surface((width, 1.5 * height))
+    cat = pygame.Surface((1.2 * width, 1.5 * height))
     cat.fill(sepia)
     cat.set_colorkey(sepia)
 
     # tail surface
-    tail = pygame.Surface((width / 3, height / 3))
+    tail = pygame.Surface((int(0.33 * width), int(0.33 * height)))
     tail.fill(sepia)
     tail.set_colorkey(sepia)
-    pygame.draw.ellipse(tail, body_color, (0, 0, width / 3, height / 3))
-    pygame.draw.ellipse(tail, black, (0, 0, width / 3, height / 3), 1)
-    cat.blit(pygame.transform.rotate(tail, -10), (width / 2, 0.44 * height))  # tail
+    pygame.draw.ellipse(tail, body_color, (0, 0, int(0.33 * width), int(0.33 * height)))
+    pygame.draw.ellipse(tail, black, (0, 0, int(0.33 * width), int(0.33 * height)), 1)
+    cat.blit(pygame.transform.rotate(tail, -10), (int(0.7 * width), int(0.44 * height)))  # tail
 
-    ellipse(cat, body_color, [width / 8, height / 30 + 0.2 * height, width / 2, 0.9 * height])  # body
-    ellipse(cat, black, [width / 8, height / 30 + 0.2 * height, width / 2, 0.9 * height], 1)  # body line
+    ellipse(cat, body_color, (0.33 * width, 0.23 * height, 0.5 * width, 0.9 * height))  # body
+    ellipse(cat, black, (0.33 * width, 0.23 * height, 0.5 * width, 0.9 * height), 1)  # body line
 
-    ellipse(cat, body_color, [width / 15, 0.63 * height, width / 12, height / 2.4])  # back paw
-    ellipse(cat, black, [width / 15, 0.63 * height, width / 12, height / 2.4], 1)  # back paw line
+    ellipse(cat, body_color, (0.27 * width, 0.63 * height, 0.08 * width, 0.42 * height))  # back paw
+    ellipse(cat, black, (0.27 * width, 0.63 * height, 0.08 * width, 0.42 * height), 1)  # back paw line
 
-    ellipse(cat, body_color, [width / 7, 0.9 * height, width / 7, height / 3.6])  # front paw
-    ellipse(cat, black, [width / 7, 0.9 * height, width / 7, height / 3.6], 1)  # front paw line
+    ellipse(cat, body_color, (0.34 * width, 0.9 * height, 0.14 * width, 0.27 * height))  # front paw
+    ellipse(cat, black, (0.34 * width, 0.9 * height, 0.14 * width, 0.27 * height), 1)  # front paw line
 
-    ellipse(cat, body_color, [0, 0.2 * height, width / 4.2, height / 1.35])  # head
-    ellipse(cat, black, [0, 0.2 * height, width / 4.2, height / 1.35], 1)  # headline
+    ellipse(cat, body_color, (0.2 * width, 0.2 * height, 0.24 * width, 0.74 * height))  # head
+    ellipse(cat, black, (0.2 * width, 0.2 * height, 0.24 * width, 0.74 * height), 1)  # headline
 
-    ellipse(cat, body_color, [width / 2.1, 0.67 * height, width / 5.5, height / 1.75])  # leg base
-    ellipse(cat, black, [width / 2.1, 0.67 * height, width / 5.5, height / 1.75], 1)  # leg base line
+    ellipse(cat, body_color, (0.68 * width, 0.67 * height, 0.18 * width, 0.57 * height))  # leg base
+    ellipse(cat, black, (0.68 * width, 0.67 * height, 0.18 * width, 0.57 * height), 1)  # leg base line
 
-    ellipse(cat, body_color, [width / 1.59, height, width / 15, height / 2])  # leg
-    ellipse(cat, black, [width / 1.59, height, width / 15, height / 2], 1)  # leg line
+    ellipse(cat, body_color, (0.83 * width, height, 0.07 * width, 0.5 * height))  # leg
+    ellipse(cat, black, (0.83 * width, height, 0.07 * width, 0.5 * height), 1)  # leg line
 
-    polygon(cat, black, [(width / 4.3, 0.1 * height), (width / 4.8, 0.4 * height),
-                            (width / 6.3, 0.25 * height),
-                            (width / 4.3, 0.1 * height)])  # right ear line
-    polygon(cat, body_color,
-            [(width / 4.3 - 1, 0.1 * height + 1), (width / 4.8 - 1, 0.4 * height - 1),
-             (width / 6.3 + 1, 0.25 * height), (width / 4.3 - 1, 0.1 * height + 1)])  # right ear
-    polygon(cat, light_orange, [(width / 4.44, 0.125 * height), (width / 4.95, 0.335 * height),
-                                      (width / 5.75, 0.25 * height),
-                                      (width / 4.44, 0.125 * height)])  # right ear interior
+    polygon(cat, body_color, ((0.43 * width, 0.1 * height), (0.41 * width, 0.4 * height),
+                              (0.36 * width, 0.25 * height), (0.43 * width, 0.1 * height)))  # right ear
+    polygon(cat, black, ((0.43 * width, 0.1 * height), (0.41 * width, 0.4 * height),
+                         (0.36 * width, 0.25 * height), (0.43 * width, 0.1 * height)), 1)  # right ear line
+    polygon(cat, light_orange,
+            ((0.422 * width, 0.145 * height), (0.4 * width, 0.335 * height),
+             (0.375 * width, 0.25 * height), (0.422 * width, 0.145 * height)))  # right ear interior
 
-    polygon(cat, black,
-            [(0, 0.1 * height), (width / 45, 0.4 * height), (width / 13, 0.25 * height),
-             (0, 0.1 * height)])  # left ear line
-    polygon(cat, body_color, [(1, 0.1 * height + 1), (width / 45 + 1, 0.4 * height - 1),
-                                   (width / 13 - 1, 0.25 * height), (1, 0.1 * height + 1)])  # left ear
-    polygon(cat, light_orange, [(0.012 * width, 0.15 * height), (width / 38, 0.335 * height),
-                                      (width / 15.6, 0.25 * height),
-                                      (0.012 * width, 0.15 * height)])  # left ear interior
+    polygon(cat, body_color, ((0.2 * width, 0.1 * height), (0.22 * width, 0.4 * height),
+                              (0.28 * width, 0.25 * height),
+                              (0.2 * width, 0.1 * height)))  # left ear
+    polygon(cat, black, ((0.2 * width, 0.1 * height), (0.22 * width, 0.4 * height),
+                         (0.28 * width, 0.25 * height), (0.2 * width, 0.1 * height)), 1)  # left ear line
+    polygon(cat, light_orange,
+            ((0.212 * width, 0.15 * height), (0.23 * width, 0.335 * height),
+             (0.26 * width, 0.25 * height), (0.212 * width, 0.15 * height)))  # left ear interior
 
-    ellipse(cat, black, [width / 28 - 1, 1 + height / 4 + 0.2 * height, width / 14.5 + 2, height / 4.2 + 2],
-            1)  # left eye line
-    ellipse(cat, eyes_color, [width / 28, height / 4 + 0.2 * height, width / 14.5, height / 4.2])  # left eye
+    ellipse(cat, eyes_color,
+            (0.24 * width, 0.45 * height, 0.07 * width, 0.24 * height))  # left eye
     ellipse(cat, black,
-            [width / 28 + width / 29, height / 3.9 + 0.2 * height, width / 80, height / 4.6])  # left eyelid
+            (0.27 * width, 0.46 * height, 0.0125 * width, 0.22 * height))  # left eyelid
     ellipse(cat, light_grey,
-            [width / 28 + width / 100, height / 3.7 + 0.2 * height, width / 35, height / 10])  # left eye shine
+            (0.246 * width, 0.47 * height, 0.028 * width, 0.1 * height))  # left eye shine
 
-    ellipse(cat, eyes_color, [width / 7.2, height / 4 + 0.2 * height, width / 14.5, height / 4.2])  # right eye
+    ellipse(cat, eyes_color,
+            (0.34 * width, 0.45 * height, 0.069 * width, 0.24 * height))  # right eye
     ellipse(cat, black,
-            [width / 7.2 + width / 29, height / 3.9 + 0.2 * height, width / 80, height / 4.6])  # right eyelid
+            (0.373 * width, 0.46 * height, 0.0125 * width, 0.217 * height))  # right eyelid
     ellipse(cat, light_grey,
-            [width / 7.2 + width / 100, height / 3.7 + 0.2 * height, width / 35, height / 10])  # left eye shine
+            (0.35 * width, 0.47 * height, 0.029 * width, 0.1 * height))  # left eye shine
 
-    polygon(cat, black, [(width / 8.4 - width / 80 - 1, 0.7 * height - 1),
-                         (width / 8.4 + width / 80 + 1, 0.7 * height - 1),
-                         (width / 8.4, height / 1.8 + 1 + 0.2 * height),
-                         (width / 8.4 - width / 80 - 1, 0.7 * height - 1)])  # nose
-    polygon(cat, pink,
-            [(width / 8.4 - width / 80, 0.7 * height), (width / 8.4 + width / 80, 0.7 * height),
-             (width / 8.4, height / 1.8 + 0.2 * height), (width / 8.4 - width / 80, 0.7 * height)])  # nose
+    polygon(cat, pink, ((int(0.306 * width), int(0.7 * height)), (int(0.33 * width), int(0.7 * height)),
+                        (int(0.319 * width), int(0.76 * height)), (int(0.306 * width), int(0.7 * height))))  # nose
+    aalines(cat, black, True, ((int(0.306 * width - 1), int(0.7 * height)), (int(0.33 * width + 1), int(0.7 * height)),
+                               (int(0.319 * width), int(0.76 * height + 1))))  # nose line
 
-    line(cat, black, (width / 8.4, height / 1.8 + 0.2 * height), (width / 8.4, height / 1.6 + 0.2 * height),
-         1)  # line from nose to mouth
-    arc(cat, black, [width / 8.4, height / 1.75 + 0.2 * height, width / 40, height / 12], 3.8, 6.28,
-        1)  # right mouth wing
-    arc(cat, black, [width / 8.4 - width / 44, height / 1.75 + 0.2 * height, width / 40, height / 12], 3.14, 6.28,
-        1)  # left mouth wing
+    line(cat, black, (int(0.319 * width), int(0.76 * height)),
+         (int(0.319 * width), int(0.825 * height)), 1)  # line from nose to mouth
+    arc(cat, black, (int(0.319 * width), int(0.77 * height), int(0.023 * width), int(0.08 * height)),
+        3.2, 6.28, 1)  # right mouth wing
+    arc(cat, black, (int(0.3 * width), int(0.77 * height), int(0.023 * width), int(0.08 * height)),
+        3.2, 6.28, 1)  # left mouth wing
 
     # whiskers
     # right
-    arc(cat, black, [width / 8.4 - width / 6.5, 0.725 * height, width / 1.8, height * 2], 1.25,
-        1.95, 1)
-    arc(cat, black,
-        [width / 8.4 - width / 6.5 + width / 40, 0.665 * height, width / 1.8, height * 2], 1.35, 2.03, 1)
-    arc(cat, black,
-        [width / 8.4 - width / 6.5 - width / 40, 0.775 * height, width / 1.8, height * 2], 1.15, 1.85, 1)
+    arc(cat, black, (0.165 * width, 0.725 * height, 0.56 * width, 2 * height), 1.25, 1.95, 1)
+    arc(cat, black, (0.19 * width, 0.665 * height, 0.56 * width, 2 * height), 1.35, 2.03, 1)
+    arc(cat, black, (0.14 * width, 0.775 * height, 0.56 * width, 2 * height), 1.15, 1.85, 1)
 
     # left
-    arc(cat, black, [width / 8.4 - width / 2.5, 0.725 * height, width / 1.8, height * 2], 1.25,
-        1.95, 1)
-    arc(cat, black,
-        [width / 8.4 - width / 2.5 - width / 40, 0.665 * height, width / 1.8, height * 2], 1.15, 1.85, 1)
-    arc(cat, black,
-        [width / 8.4 - width / 2.5 + width / 40, 0.775 * height, width / 1.8, height * 2], 1.35, 2.05, 1)
+    arc(cat, black, (-0.08 * width, 0.725 * height, 0.56 * width, 2 * height), 1.25, 1.95, 1)
+    arc(cat, black, (-0.106 * width, 0.665 * height, 0.56 * width, 2 * height), 1.15, 1.85, 1)
+    arc(cat, black, (-0.056 * width, 0.775 * height, 0.56 * width, 2 * height), 1.35, 2.05, 1)
 
     if orientation == 'right':
         cat = pygame.transform.flip(cat, True, False)
-        surface.blit(cat, (x - 0.8 * width, y))
-    else:
-        surface.blit(cat, (x, y))
+    surface.blit(cat, (x, y))
 
 
 def ball_of_thread(surface, x, y, r, orientation):
+    """
+    Function that draws ball of threads
+    :param surface: object pygame.Surface
+    :param x: x-coordinate of the left top corner
+    :param y: y-coordinate of the left top corner
+    :param r: radius of the ball
+    :param orientation: 'right' or 'left'
+    """
     ball = pygame.Surface((3 * r, 2 * r))
     ball.set_colorkey(sepia)
     ball.fill(sepia)
@@ -145,23 +158,23 @@ def ball_of_thread(surface, x, y, r, orientation):
     circle(ball, grey, (r, r), r)
     circle(ball, black, (r, r), r, 1)
 
-    arc(ball, black, [0.17 * r, 0.25 * r, 1.9 * r, 1.9 * r], 1.66, 3.14, 1)
-    arc(ball, black, [0.35 * r, 0.35 * r, 2 * r, 2 * r], 1.66, 3.14, 1)
-    arc(ball, black, [0.45 * r, 0.45 * r, 2 * r, 2 * r], 1.66, 3.14, 1)
-    arc(ball, black, [-0.25 * r, 0.5 * r, 2 * r, 2 * r], 0.15, 1.15, 1)
-    arc(ball, black, [-0.41 * r, 0.65 * r, 2.1 * r, 2.1 * r], 0.15, 1.15, 1)
-    arc(ball, black, [-0.65 * r, 0.85 * r, 2 * r, 2 * r], 0.15, 1.15, 1)
+    arc(ball, black, (0.17 * r, 0.25 * r, 1.9 * r, 1.9 * r), 1.66, 3.14, 1)
+    arc(ball, black, (0.35 * r, 0.35 * r, 2 * r, 2 * r), 1.66, 3.14, 1)
+    arc(ball, black, (0.45 * r, 0.45 * r, 2 * r, 2 * r), 1.66, 3.14, 1)
+    arc(ball, black, (-0.25 * r, 0.5 * r, 2 * r, 2 * r), 0.15, 1.15, 1)
+    arc(ball, black, (-0.41 * r, 0.65 * r, 2.1 * r, 2.1 * r), 0.15, 1.15, 1)
+    arc(ball, black, (-0.65 * r, 0.85 * r, 2 * r, 2 * r), 0.15, 1.15, 1)
 
     # thread tail
-    arc(ball, grey, [r + 0.33 * r, r + 0.225 * r, 0.7 * r, 0.7 * r], 4.1888, 5.236, 1)
-    arc(ball, grey, [r + 0.33 * r + 0.35 * r, r + 0.225 * r + 0.606 * r, 0.7 * r, 0.7 * r], 1.0472, 2.11, 1)
-    arc(ball, grey, [r + 0.33 * r + 0.7 * r, r + 0.225 * r, 0.7 * r, 0.7 * r], 4.1888, 5.236, 1)
-    arc(ball, grey, [r + 0.33 * r + 1.05 * r, r + 0.225 * r + 0.606 * r, 0.7 * r, 0.7 * r], 1.0472, 2.11, 1)
-    arc(ball, grey, [r + 0.33 * r + 1.4 * r, r + 0.225 * r, 0.7 * r, 0.7 * r], 4.1888, 5.236, 1)
-    arc(ball, grey, [r + 0.33 * r + 1.75 * r, r + 0.225 * r + 0.606 * r, 0.7 * r, 0.7 * r], 1.0472, 2.11, 1)
+    arc(ball, grey, (1.33 * r, 1.225 * r, 0.7 * r, 0.7 * r), 4.1888, 5.236, 1)
+    arc(ball, grey, (1.68 * r, 1.831 * r, 0.7 * r, 0.7 * r), 1.0472, 2.11, 1)
+    arc(ball, grey, (2.03 * r, 1.225 * r, 0.7 * r, 0.7 * r), 4.1888, 5.236, 1)
+    arc(ball, grey, (2.38 * r, 1.831 * r, 0.7 * r, 0.7 * r), 1.0472, 2.11, 1)
+    arc(ball, grey, (2.73 * r, 1.225 * r, 0.7 * r, 0.7 * r), 4.1888, 5.236, 1)
+    arc(ball, grey, (3.08 * r, 1.831 * r, 0.7 * r, 0.7 * r), 1.0472, 2.11, 1)
+
     if orientation == 'right':
         ball = pygame.transform.flip(ball, True, False)
-
     surface.blit(ball, (x - r, y - r))
 
 
@@ -174,17 +187,17 @@ draw_window(130, 35, 250, 330)
 
 draw_window(-140, 35, 250, 330)
 
-draw_cat(screen, 60, 400, 400, 120, body_color=brown, eyes_color=green, orientation='left')
-draw_cat(screen, 300, 440, 300, 90, body_color=dark_grey, eyes_color=yellow, orientation='left')
-draw_cat(screen, 300, 530, 400, 120, body_color=dark_grey, eyes_color=yellow, orientation='right')
-draw_cat(screen, 300, 230, 240, 72, body_color=dark_grey, eyes_color=yellow, orientation='right')
-draw_cat(screen, 220, 700, 300, 90, body_color=brown, eyes_color=green, orientation='left')
-draw_cat(screen, 520, 700, 300, 90, body_color=brown, eyes_color=green, orientation='right')
+draw_cat(screen, -30, 400, 400, 120, body_color=brown, eyes_color=green, orientation='left')
+draw_cat(screen, 330, 440, 300, 90, body_color=dark_grey, eyes_color=yellow, orientation='left')
+draw_cat(screen, 0, 530, 400, 120, body_color=dark_grey, eyes_color=yellow, orientation='right')
+draw_cat(screen, 230, 350, 240, 72, body_color=dark_grey, eyes_color=yellow, orientation='right')
+draw_cat(screen, 100, 700, 300, 90, body_color=brown, eyes_color=green, orientation='left')
+draw_cat(screen, 250, 700, 300, 90, body_color=brown, eyes_color=green, orientation='right')
 
-ball_of_thread(screen, 400, 660, 60, orientation='left')
-ball_of_thread(screen, 200, 560, 40, orientation='right')
-ball_of_thread(screen, 300, 60, 100, orientation='left')
-ball_of_thread(screen, 100, 760, 50, orientation='left')
+ball_of_thread(screen, 450, 650, 60, orientation='left')
+ball_of_thread(screen, 50, 560, 40, orientation='right')
+ball_of_thread(screen, 510, 400, 40, orientation='left')
+ball_of_thread(screen, 60, 750, 50, orientation='left')
 
 pygame.display.update()
 clock = pygame.time.Clock()
