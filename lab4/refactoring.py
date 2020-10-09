@@ -25,19 +25,20 @@ dark_brown = (84, 54, 5)
 pink = (255, 157, 155)
 
 
-def draw_window(x, y, width, height):
+def draw_window(surface, x, y, width, height):
     """
     Function that draws window
+    :param surface: object pygame.Surface
     :param x: x-coordinate of the left top corner
     :param y: y-coordinate of the left top corner
     :param width: width of window
     :param height: height of window
     """
-    rect(screen, white, (x, y, width, height))
-    rect(screen, light_blue, (x + width * 0.025, y + height * 0.025, 0.45 * width, 0.45 * height))
-    rect(screen, light_blue, (x + width * 0.025, y + height * 0.525, 0.45 * width, 0.45 * height))
-    rect(screen, light_blue, (x + width * 0.525, y + height * 0.025, 0.45 * width, 0.45 * height))
-    rect(screen, light_blue, (x + width * 0.525, y + height * 0.525, 0.45 * width, 0.45 * height))
+    rect(surface, white, (x, y, width, height))
+    rect(surface, light_blue, (x + width * 0.025, y + height * 0.025, 0.45 * width, 0.45 * height))
+    rect(surface, light_blue, (x + width * 0.025, y + height * 0.525, 0.45 * width, 0.45 * height))
+    rect(surface, light_blue, (x + width * 0.525, y + height * 0.025, 0.45 * width, 0.45 * height))
+    rect(surface, light_blue, (x + width * 0.525, y + height * 0.525, 0.45 * width, 0.45 * height))
 
 
 def draw_cat(surface, x, y, width, height, body_color, eyes_color, orientation):
@@ -181,11 +182,11 @@ def ball_of_thread(surface, x, y, r, orientation):
 rect(screen, sepia, (0, 400, 600, 400))
 rect(screen, dark_brown, (0, 0, 600, 400))
 
-draw_window(400, 35, 250, 330)
+draw_window(screen, 400, 35, 250, 330)
 
-draw_window(130, 35, 250, 330)
+draw_window(screen, 130, 35, 250, 330)
 
-draw_window(-140, 35, 250, 330)
+draw_window(screen, -140, 35, 250, 330)
 
 draw_cat(screen, -30, 400, 400, 120, body_color=brown, eyes_color=green, orientation='left')
 draw_cat(screen, 330, 440, 300, 90, body_color=dark_grey, eyes_color=yellow, orientation='left')
