@@ -35,6 +35,8 @@ CYAN = (0, 255, 255)
 BLACK = (0, 0, 0)
 COLORS = [RED, BLUE, YELLOW, GREEN, MAGENTA, CYAN]
 
+MAX_NUMBER_OF_BALLS = 5
+
 score = 0
 FONT = pygame.font.Font(None, 36)
 text = FONT.render('Score: ' + str(score), 1, WHITE)
@@ -85,7 +87,7 @@ clock = pygame.time.Clock()
 finished = False
 
 while not finished:
-    if len(balls) <= 1:
+    if len(balls) <= MAX_NUMBER_OF_BALLS:
         new_ball()
     for i in range(FPS // 2):
         clock.tick(FPS)
