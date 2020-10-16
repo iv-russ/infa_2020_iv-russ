@@ -17,14 +17,16 @@ class Ball:
         self.v_x = v_x  # projection of ball's velocity to x-axe
         self.v_y = v_y  # projection of ball's velocity to y-axe
         self.color = color  # color of ball
-        self.lifetime = lifetime
+        self.lifetime = lifetime  # lifetime of ball
 
 
-FPS = 24
-WIDTH, HEIGHT = 1200, 800
-R_MIN, R_MAX = 20, 100
+FPS = 24  # frames per second
+WIDTH, HEIGHT = 1200, 800  # width and height of window
+R_MIN, R_MAX = 20, 100  # minimal and maximal radius of ball
+
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
+# colors
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
@@ -35,16 +37,15 @@ CYAN = (0, 255, 255)
 BLACK = (0, 0, 0)
 COLORS = [RED, BLUE, YELLOW, GREEN, MAGENTA, CYAN]
 
-MAX_NUMBER_OF_BALLS = 5
-
 score = 0
+# label with score
 FONT = pygame.font.Font(None, 36)
 text = FONT.render('Score: ' + str(score), 1, WHITE)
 TEXT_POSITION = (0, 0)
 screen.blit(text, TEXT_POSITION)
 
 
-def new_ball():
+def new_ball(balls):
     """Create new ball"""
     x = randint(R_MAX, WIDTH - R_MAX)  # x-coordinate of ball's center
     y = randint(R_MAX, HEIGHT - R_MAX)  # y-coordinate of ball's center
@@ -58,13 +59,11 @@ def new_ball():
 
 
 def draw_ball(ball):
+    """Draw ball on the screen"""
     surf = pygame.Surface((2 * ball.r, 2 * ball.r))
     surf.fill(BLACK)
     surf.set_colorkey(BLACK)
     circle(surf, ball.color, (ball.r, ball.r), ball.r)
-    font1 = pygame.font.Font(None, 2 * ball.r)
-    number_on_ball = font1.render(str(ball.lifetime), 1, WHITE)
-    surf.blit(number_on_ball, (3 * ball.r // 5, ball.r // 2))
     screen.blit(surf, (ball.x - ball.r, ball.y - ball.r))
 
 
@@ -87,27 +86,42 @@ clock = pygame.time.Clock()
 finished = False
 
 while not finished:
-    if len(balls) <= MAX_NUMBER_OF_BALLS:
-        new_ball()
+    new_ball(balls)
     for i in range(FPS // 2):
         clock.tick(FPS)
+        # handling of events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 finished = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 click(event)
+
+        # changing position of events
         for ball in balls:
-            if ball.x <= ball.r or ball.x >= WIDTH - ball.r:
-                ball.v_x = -ball.v_x
-            if ball.y <= ball.r or ball.y >= HEIGHT - ball.r:
-                ball.v_y = -ball.v_y
+            if ball.x <= ball.r:
+                ball.v_x = randint(1, 10)
+                ball.v_y = randint(-10, 10)
+            elif ball.x >= WIDTH - ball.r:
+                ball.v_x = randint(-10, -4)
+                ball.v_y = randint(-10, 10)
+            if ball.y <= ball.r:
+                ball.v_y = randint(4, 12)
+                ball.v_x = randint(-10, 10)
+            elif ball.y >= HEIGHT - ball.r:
+                ball.v_y = randint(-12, -4)
+                ball.v_x = randint(-10, 10)
             ball.x += ball.v_x
             ball.y += ball.v_y
             draw_ball(ball)
+
+        # changing number of scores on the screen
         text = FONT.render('Score: ' + str(score), 1, WHITE)
         screen.blit(text, TEXT_POSITION)
+
         pygame.display.update()
         screen.fill(BLACK)
+
+    # changing lifetime of balls
     for ball in balls:
         ball.lifetime -= 1
         if ball.lifetime <= 0:
