@@ -208,7 +208,9 @@ if finished:
 balls = []
 squares = []
 
-while not finished:
+time_is_over = False
+
+while not finished and not time_is_over:
     new_ball(balls)
     new_square(squares)
     for i in range(FPS):
@@ -268,9 +270,10 @@ while not finished:
     # changing time on the screen
     TIME -= 1
     if TIME <= 0:
-        finished = True
+        time_is_over = True
 
-pygame.quit()
+if finished:
+    pygame.quit()
 
 list_of_the_best_players = []
 # get names and scores of players
@@ -289,3 +292,19 @@ list_of_the_best_players.sort(key=lambda x: x[1], reverse=True)
 with open('the_best_players.txt', 'w') as outfile:
     for player in list_of_the_best_players:
         outfile.write(str(player[0]) + '\t' + str(player[1]) + '\n')
+
+# displaying results of game
+text1 = 'GAME OVER'
+text2 = 'Your score is ' + str(score)
+text1_surface = FONT.render(text1, 1, WHITE)
+text2_surface = FONT.render(text2, 1, WHITE)
+TEXT1_POSITION = (500, 400)
+TEXT2_POSITION = (500, 450)
+screen.blit(text1_surface, TEXT1_POSITION)
+screen.blit(text2_surface, TEXT2_POSITION)
+pygame.display.update()
+while not finished:
+    clock.tick(FPS)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            finished = True

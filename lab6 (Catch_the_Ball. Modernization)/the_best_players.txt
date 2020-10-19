@@ -1,7 +1,12 @@
+Ivan	76
+Ivan	75
+Ivan	75
 nobody	69
+Ivan	69
 Ivan	69
 Ivan	66
 Ivan	65
+Ivan	62
 Ivan	53
 Ivan	30
 Ivan	23
