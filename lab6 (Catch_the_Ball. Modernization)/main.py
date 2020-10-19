@@ -212,6 +212,7 @@ time_is_over = False
 
 while not finished and not time_is_over:
     new_ball(balls)
+    new_ball(balls)
     new_square(squares)
     for i in range(FPS):
         clock.tick(FPS)
@@ -285,8 +286,9 @@ with open('the_best_players.txt', 'r') as outfile:
             list_of_the_best_players.append((player_name, player_score))
 
 # append NAME and score of current player
-list_of_the_best_players.append((NAME, score))
-list_of_the_best_players.sort(key=lambda x: x[1], reverse=True)
+if NAME != '':
+    list_of_the_best_players.append((NAME, score))
+    list_of_the_best_players.sort(key=lambda x: x[1], reverse=True)
 
 # write names and scores to file
 with open('the_best_players.txt', 'w') as outfile:

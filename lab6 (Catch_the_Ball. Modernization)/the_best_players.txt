@@ -1,6 +1,8 @@
+Ivan	80
 Ivan	76
 Ivan	75
 Ivan	75
+BOSS	71
 nobody	69
 Ivan	69
 Ivan	69
