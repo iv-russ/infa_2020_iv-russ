@@ -1,0 +1,15 @@
+nobody	69
+Ivan	69
+Ivan	66
+Ivan	65
+Ivan	53
+Ivan	30
+Ivan	23
+nobody	21
+Ivan	18
+Ivan	15
+Ivan	5
+Ivan	2
+Ivan	1
+Ivan	0
+Ivan	0
