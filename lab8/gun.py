@@ -43,11 +43,11 @@ class Ball:
         )
 
     def move(self):
-        """Переместить мяч по прошествии единицы времени.
+        """Переместить мяч по прошествии единицы времени
 
-        Метод описывает перемещение мяча за один кадр перерисовки. То есть, обновляет значения
+        Метод описывает перемещение мяча за один кадр перерисовки, обновляя значения
         self.x и self.y с учетом скоростей self.vx и self.vy, силы гравитации, действующей на мяч,
-        и стен по краям окна (размер окна 800х600).
+        и стен по краям окна (размер окна 800х600)
         """
         x, y = self.x, self.y
         self.x += self.vx
@@ -72,12 +72,12 @@ class Ball:
         canvas.move(self.id, self.x - x, self.y - y)
 
     def hittest(self, obj):
-        """Функция проверяет сталкивалкивается ли данный обьект с целью, описываемой в обьекте obj.
+        """Функция проверяет сталкивалкивается ли данный обьект с целью, описываемой в обьекте obj
 
         Args:
-            obj: Обьект, с которым проверяется столкновение.
+            obj: Обьект, с которым проверяется столкновение
         Returns:
-            Возвращает True в случае столкновения мяча и цели. В противном случае возвращает False.
+            Возвращает True в случае столкновения мяча и цели. В противном случае возвращает False
         """
         if (self.x - obj.x) ** 2 + (self.y - obj.y) ** 2 <= (self.r + obj.r) ** 2:
             return True
@@ -95,10 +95,10 @@ class Gun:
         self.f2_on = 1
 
     def fire2_end(self, event):
-        """Выстрел мячом.
+        """Выстрел мячом
 
-        Происходит при отпускании кнопки мыши.
-        Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
+        Происходит при отпускании кнопки мыши
+        Начальные значения компонент скорости мяча vx и vy зависят от положения мыши
         """
         global balls, bullet
         bullet += 1
@@ -112,9 +112,15 @@ class Gun:
         self.f2_power = 10
 
     def targeting(self, event):
-        """Прицеливание. Зависит от положения мыши."""
+        """
+        Прицеливание
+        Зависит от положения мыши
+        """
         if event:
-            self.an = math.atan((event.y - 450) / (event.x - 20))
+            if event.x != 20:
+                self.an = math.atan((event.y - 450) / (event.x - 20))
+            else:
+                self.an = math.pi / 2
         if self.f2_on:
             canvas.itemconfig(self.id, fill='orange')
         else:
@@ -134,22 +140,24 @@ class Gun:
 
 
 class Target:
-    def __init__(self, x, y, r):
+    def __init__(self, x=0, y=0, r=0, vx=0, vy=0):
         self.color = 'red'
         self.points = 0
         self.live = 1
         self.x = x
         self.y = y
         self.r = r
+        self.vx = vx
+        self.vy = vy
         self.id = canvas.create_oval(x - r, y - r, x + r, y + r)
-        self.id_points = canvas.create_text(30, 30, text=self.points, font='28')
-        # self.new_Target()
 
     def new_target(self):
         """ Инициализация новой цели"""
-        x = self.x = rnd(600, 780)
+        x = self.x = rnd(600, 750)
         y = self.y = rnd(300, 550)
-        r = self.r = rnd(2, 50)
+        r = self.r = rnd(5, 50)
+        self.vx = rnd(-10, 10)
+        self.vy = rnd(-10, 10)
         color = self.color
         canvas.coords(self.id, x - r, y - r, x + r, y + r)
         canvas.itemconfig(self.id, fill=color)
@@ -158,28 +166,51 @@ class Target:
         """Попадание шарика в цель"""
         canvas.coords(self.id, -10, -10, -10, -10)
         self.points += points
-        canvas.itemconfig(self.id_points, text=self.points)
+
+    def move(self):
+        x, y = self.x, self.y
+        self.x += self.vx
+        self.y -= self.vy
+        if self.x - self.r <= 0 or self.x + self.r >= 800:
+            self.vx = -self.vx
+        if self.y - self.r <= 0 or self.y + self.r >= 600:
+            self.vy = -self.vy
+        canvas.move(self.id, self.x - x, self.y - y)
 
 
-t1 = Target(0, 0, 0)
+t1 = Target()
+t2 = Target()
 screen1 = canvas.create_text(400, 300, text='', font='28')
 g1 = Gun()
 bullet = 0
 balls = []
+targets = [t1, t2]
+sum_points = 0
+screen_points = canvas.create_text(30, 30, text=sum_points, font='28')
 
 
 def new_game(event=''):
-    global t1, screen1, balls, bullet
+    global t1, t2, screen1, balls, bullet, sum_points, screen_points
+    for b in balls:
+        canvas.delete(b.id)
+    balls = []
     t1.new_target()
+    t2.new_target()
+
     bullet = 0
     balls = []
     canvas.bind('<Button-1>', g1.fire2_start)
     canvas.bind('<ButtonRelease-1>', g1.fire2_end)
     canvas.bind('<Motion>', g1.targeting)
 
-    z = 0.03
+    is_hit_1 = False
+    is_hit_2 = False
+
     t1.live = 1
-    while t1.live or balls:
+    t2.live = 1
+    while t1.live or t2.live or balls:
+        for t in targets:
+            t.move()
         for b in balls:
             b.move()
             if b.vx == 0 and b.vy == 0:
@@ -190,9 +221,30 @@ def new_game(event=''):
             if b.hittest(t1) and t1.live:
                 t1.live = 0
                 t1.hit()
+                is_hit_1 = True
+                sum_points += 1
+            if b.hittest(t2) and t2.live:
+                t2.live = 0
+                t2.hit()
+                is_hit_2 = True
+                sum_points += 1
+            canvas.delete(screen_points)
+            screen_points = canvas.create_text(30, 30, text=sum_points, font='28')
+            if is_hit_1 and is_hit_2:
                 canvas.bind('<Button-1>', '')
                 canvas.bind('<ButtonRelease-1>', '')
-                canvas.itemconfig(screen1, text='Вы уничтожили цель за ' + str(bullet) + ' выстрелов')
+                if 5 <= int(str(bullet)[-1]) <= 9 or int(str(bullet)[-1]) == 0:
+                    canvas.itemconfig(screen1, text='Вы уничтожили цели за ' + str(bullet) + ' выстрелов')
+                elif bullet == 1:
+                    canvas.itemconfig(screen1, text='Вы уничтожили цели за ' + str(bullet) + ' выстрел')
+                elif 2 <= bullet <= 4:
+                    canvas.itemconfig(screen1, text='Вы уничтожили цели за ' + str(bullet) + ' выстрела')
+                elif str(bullet)[-2] == '1':
+                    canvas.itemconfig(screen1, text='Вы уничтожили цели за ' + str(bullet) + ' выстрелов')
+                elif str(bullet)[-1] == '1':
+                    canvas.itemconfig(screen1, text='Вы уничтожили цели за ' + str(bullet) + ' выстрел')
+                else:
+                    canvas.itemconfig(screen1, text='Вы уничтожили цели за ' + str(bullet) + ' выстрела')
         canvas.update()
         time.sleep(0.03)
         g1.targeting(event)
