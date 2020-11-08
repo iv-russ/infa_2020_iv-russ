@@ -61,7 +61,10 @@ class Ball:
             self.x = 800 - self.r
             self.vx = -0.5 * self.vx
             self.vy *= 0.5
-        if self.y + self.r >= 600:
+        if self.y - self.r <= 0:
+            self.y = self.r
+            self.vy = -self.vy
+        elif self.y + self.r >= 600:
             self.y = 600 - self.r
             self.vy = -0.5 * self.vy
             self.vx *= 0.5
@@ -98,13 +101,15 @@ class Gun:
         self.f2_on = 0
         self.an = 1
         self.x0 = 30
-        self.y0 = 550
-        self.id_body = canvas.create_rectangle(self.x0, self.y0, self.x0 + 100, self.y0 + 50, fill='grey')
+        self.y0 = 570
+        self.width = 50
+        self.height = 30
+        self.id_body = canvas.create_rectangle(self.x0, self.y0, self.x0 + self.width, self.y0 + self.height, fill='grey')
         self.id = canvas.create_line(self.x0, self.y0, self.x0 + 30, self.y0 - 30, width=7)
+        self.lives = 3
 
     def fire2_start(self, event):
-        if event.keysym == 'space' or event.keysym == '??':
-            self.f2_on = 1
+        self.f2_on = 1
 
     def fire2_end(self, event):
         """Выстрел мячом
@@ -113,29 +118,28 @@ class Gun:
         Начальные значения компонент скорости мяча vx и vy зависят от положения мыши
         """
         global balls, bullet
-        if event.keysym == 'space' or event.keysym == '??':
-            bullet += 1
-            if not is_massive:
-                new_ball = Ball(x=self.x0, y=self.y0)
-            else:
-                new_ball = MassiveBall(x=self.x0, y=self.y0)
-                new_ball.color = 'orange'
-            new_ball.r += 5
-            if event.x - new_ball.x > 0:
-                self.an = math.atan((event.y - new_ball.y) / (event.x - new_ball.x))
-            elif event.x - new_ball.x < 0:
-                self.an = math.pi + math.atan((event.y - new_ball.y) / (event.x - new_ball.x))
-            else:
-                self.an = math.pi / 2
-            if not is_massive:
-                new_ball.vx = self.f2_power * math.cos(self.an)
-                new_ball.vy = -self.f2_power * math.sin(self.an)
-            else:
-                new_ball.vx = self.f2_power * math.cos(self.an) / 2
-                new_ball.vy = -self.f2_power * math.sin(self.an) / 2
-            balls += [new_ball]
-            self.f2_on = 0
-            self.f2_power = 10
+        bullet += 1
+        if not is_massive:
+            new_ball = Ball(x=self.x0, y=self.y0)
+        else:
+            new_ball = MassiveBall(x=self.x0, y=self.y0)
+            new_ball.color = 'orange'
+        new_ball.r += 5
+        if event.x - new_ball.x > 0:
+            self.an = math.atan((event.y - new_ball.y) / (event.x - new_ball.x))
+        elif event.x - new_ball.x < 0:
+            self.an = math.pi + math.atan((event.y - new_ball.y) / (event.x - new_ball.x))
+        else:
+            self.an = math.pi / 2
+        if not is_massive:
+            new_ball.vx = self.f2_power * math.cos(self.an)
+            new_ball.vy = -self.f2_power * math.sin(self.an)
+        else:
+            new_ball.vx = self.f2_power * math.cos(self.an) / 2
+            new_ball.vy = -self.f2_power * math.sin(self.an) / 2
+        balls += [new_ball]
+        self.f2_on = 0
+        self.f2_power = 10
 
     def targeting(self, event):
         """
@@ -167,16 +171,16 @@ class Gun:
             canvas.itemconfig(self.id, fill='black')
 
     def move_right(self, event):
-        if event.keysym == 'Right' and self.x0 <= 698:
-            self.x0 += 2
-            canvas.move(self.id, 2, 0)
-            canvas.move(self.id_body, 2, 0)
+        if event.keysym == 'Right' and self.x0 <= 695:
+            self.x0 += 5
+            canvas.move(self.id, 5, 0)
+            canvas.move(self.id_body, 5, 0)
 
     def move_left(self, event):
-        if event.keysym == 'Left' and self.x0 >= 2:
-            self.x0 -= 2
-            canvas.move(self.id, -2, 0)
-            canvas.move(self.id_body, -2, 0)
+        if event.keysym == 'Left' and self.x0 >= 5:
+            self.x0 -= 5
+            canvas.move(self.id, -5, 0)
+            canvas.move(self.id_body, -5, 0)
 
 
 class ClassicTarget:
@@ -190,6 +194,7 @@ class ClassicTarget:
         self.vx = vx
         self.vy = vy
         self.id = canvas.create_oval(x - r, y - r, x + r, y + r)
+        self.Time = 0
 
     def new_target(self):
         """ Инициализация новой цели"""
@@ -207,7 +212,12 @@ class ClassicTarget:
         canvas.coords(self.id, -10, -10, -10, -10)
         self.points += points
 
+    def create_bomb(self):
+        bomb = Bomb(x=self.x, y=self.y)
+        bombs.append(bomb)
+
     def move(self):
+        self.Time += 1
         x, y = self.x, self.y
         if self.vx == 0:
             self.vx = rnd(1, 5)
@@ -230,6 +240,7 @@ class EllipseMovingTarget(ClassicTarget):
         self.center_of_ellipse_y = rnd(100, 500)
 
     def move(self):
+        self.Time += 1
         self.vx += (self.center_of_ellipse_x - self.x) / 50
         self.vy += (self.center_of_ellipse_y - self.y) / 50
         if self.x - self.r <= 0:
@@ -245,25 +256,67 @@ class EllipseMovingTarget(ClassicTarget):
         canvas.move(self.id, self.vx, self.vy)
 
 
-def change_types_of_balls():
+class Bomb:
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+        self.vx = self.vy = 0
+        r = self.r = 5
+        self.color = 'grey'
+        self.id = canvas.create_oval(x - r, y - r, x + r, y + r, fill=self.color)
+
+    def hit_gun(self, gun):
+        if gun.x0 <= self.x <= gun.x0 + gun.width and gun.y0 <= self.y <= gun.y0 + gun.height:
+            return True
+        return False
+
+    def move(self):
+        self.vy -= 2
+        self.x += self.vx
+        self.y -= self.vy
+        canvas.coords(
+            self.id,
+            self.x - self.r,
+            self.y - self.r,
+            self.x + self.r,
+            self.y + self.r
+        )
+
+
+def change_types_of_balls(event):
     global is_massive
     is_massive = not is_massive
+    if is_massive:
+        canvas.itemconfig(screen3, text='Вы используете большие, но тяжёлые снаряды \n         '
+                                        'Нажмите C для смены типа снаряда')
+    else:
+        canvas.itemconfig(screen3, text='Вы используете маленькие, но лёгкие снаряды \n         '
+                                        'Нажмите C для смены типа снаряда')
 
 
 t1 = ClassicTarget()
 t2 = EllipseMovingTarget()
 screen1 = canvas.create_text(400, 300, text='', font='28')
 screen2 = canvas.create_text(720, 30, text='Ваши жизни: 3', font='28')
+screen3 = canvas.create_text(400, 40,
+                             text='Вы используете маленькие, но лёгкие снаряды \n         '
+                                  'Нажмите C для смены типа снаряда',
+                             font='28')
 is_massive = False
 g1 = Gun()
 bullet = 0
 balls = []
 targets = [t1, t2]
+bombs = []
 sum_points = 0
 screen_points = canvas.create_text(30, 30, text=sum_points, font='28')
+finished = False
 
 
 def new_game(event=''):
+    global finished
+    if finished:
+        return None
     global t1, t2, screen1, balls, bullet, sum_points, screen_points
     for b in balls:
         canvas.delete(b.id)
@@ -273,12 +326,13 @@ def new_game(event=''):
     bullet = 0
     balls = []
     canvas.bind('<Button-1>', g1.fire2_start)
-    canvas.bind('<KeyPress>', g1.fire2_start)
+    canvas.bind('<KeyPress-space>', g1.fire2_start)
     canvas.bind('<ButtonRelease-1>', g1.fire2_end)
-    canvas.bind('<KeyRelease>', g1.fire2_end)
+    canvas.bind('<KeyRelease-space>', g1.fire2_end)
     canvas.bind('<Motion>', g1.targeting)
     canvas.bind('<Left>', g1.move_left)
     canvas.bind('<Right>', g1.move_right)
+    canvas.bind('<Key-c>', change_types_of_balls)
 
     is_hit_1 = False
     is_hit_2 = False
@@ -288,6 +342,30 @@ def new_game(event=''):
     while t1.live or t2.live or balls:
         for t in targets:
             t.move()
+            if t.Time >= 100 and t.live:
+                t.create_bomb()
+                t.Time = 0
+        for bomb in bombs:
+            bomb.move()
+            if bomb.hit_gun(gun=g1):
+                canvas.delete(bomb.id)
+                bombs.remove(bomb)
+                g1.lives -= 1
+                canvas.itemconfig(screen2, text='Ваши жизни: ' + str(g1.lives))
+                if g1.lives <= 0:
+                    canvas.create_text(400, 300, text='GAME OVER', font='80')
+                    finished = True
+                    break
+        if finished:
+            canvas.bind('<Button-1>', '')
+            canvas.bind('<KeyPress-space>', '')
+            canvas.bind('<ButtonRelease-1>', '')
+            canvas.bind('<KeyRelease-space>', '')
+            canvas.bind('<Motion>', '')
+            canvas.bind('<Left>', '')
+            canvas.bind('<Right>', '')
+            canvas.bind('<Key-c>', '')
+            break
         for b in balls:
             b.move()
             if b.vx == 0 and b.vy == 0:
@@ -309,9 +387,9 @@ def new_game(event=''):
             screen_points = canvas.create_text(30, 30, text=sum_points, font='28')
             if is_hit_1 and is_hit_2:
                 canvas.bind('<Button-1>', '')
-                canvas.bind('<KeyPress>', '')
+                canvas.bind('<KeyPress-space>', '')
                 canvas.bind('<ButtonRelease-1>', '')
-                canvas.bind('<KeyRelease>', '')
+                canvas.bind('<KeyRelease-space>', '')
                 if 5 <= int(str(bullet)[-1]) <= 9 or int(str(bullet)[-1]) == 0:
                     canvas.itemconfig(screen1, text='Вы уничтожили цели за ' + str(bullet) + ' выстрелов')
                 elif bullet == 1:
